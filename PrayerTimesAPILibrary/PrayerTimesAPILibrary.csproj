@@ -14,6 +14,16 @@
     <Product>Prayer Times API Library</Product>
     <Description>A .NET library to call the Islamic Network Prayer Times API</Description>
     <Copyright>2023 TarekFadel.com</Copyright>
+    <PackageProjectUrl>https://github.com/tHeCh0s3n0n3/PrayerTimesAPILibrary</PackageProjectUrl>
+    <PackageIcon>Prayer Times Library (128x128x32).png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/tHeCh0s3n0n3/PrayerTimesAPILibrary</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>library;prayer times</PackageTags>
+    <NeutralLanguage>en-US</NeutralLanguage>
+    <AssemblyVersion>1.0.23088.1</AssemblyVersion>
+    <FileVersion>1.0.23088.1</FileVersion>
+    <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -26,6 +36,21 @@
 
   <ItemGroup>
     <Content Include="Prayer Times Library.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE.txt">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="D:\OneDrive\Pictures\Logos\Prayer Times Library\Prayer Times Library (128x128x32).png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
