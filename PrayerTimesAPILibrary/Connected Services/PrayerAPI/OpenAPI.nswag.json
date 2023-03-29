@@ -1,0 +1,3541 @@
+﻿{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "Islamic Network - Prayer Times API",
+    "description": "# Introduction\n\nA RESTful API to get islamic prayer times for a given day, month or year.\n\n## Note \n\nThe API has several endpoints to assist developers. All the endpoints return JSON and are available over `http` and `https`.\n\nThis documentation is incomplete, and currently a work in progress. The full documentation can be accessed [here](https://aladhan.com/prayer-times-api).\n\n**NOTE: If you are using this API, please sign up to the developer mailing list [here](https://aladhan.com/contact) so you can be informed of any updates or scheduled maintenance to the API.**\n\n## Contributing\n\nThe following links may be useful if interested in contributing:\n- [Patreon](https://www.patreon.com/islamicnetwork/)\n- [API Codebase](https://github.com/islamic-network/api.aladhan.com)\n- [OpenAPI Documentation](https://github.com/islamic-network/openapi)\n- [Islamic Network Website (Current Documentation)](https://aladhan.com/)\n\nDonations to our [patreaon](https://www.patreon.com/islamicnetwork/) are appreciated and used to pay for cost of the cluster that provides the Islamic Network APIs (this includes the AlAdhan, AlQuran APIs and the Masjid Project).\n\nIf you have any suggestions or would like to say something, you can get in touch by visiting the Islamic Network Community at https://community.islamic.network, emailing `support@islamic.network` or by joining the [Islamic Network Discord server](https://discord.gg/FwUy69M).\n",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://api.aladhan.com"
+    },
+    {
+      "url": "https://api.aladhan.com"
+    }
+  ],
+  "paths": {
+    "/v1/currentDate": {
+      "summary": "Current Date",
+      "get": {
+        "tags": [
+          "Current Date/Time"
+        ],
+        "summary": "Current Date",
+        "description": "Returns the current date for the specified time zone.\n",
+        "operationId": "currentDate",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "query",
+            "required": true,
+            "description": "A valid timezone as specified [here](http://php.net/manual/en/timezones.php).",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/current-date-success"
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK",
+                  "data": "23-08-2017"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currentTime": {
+      "summary": "Current Time",
+      "get": {
+        "tags": [
+          "Current Date/Time"
+        ],
+        "summary": "Current Time",
+        "description": "Returns the current time for the specified time zone.\n",
+        "operationId": "currentTime",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "query",
+            "required": true,
+            "description": "A valid timezone as specified [here](http://php.net/manual/en/timezones.php).",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/current-time-success"
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK",
+                  "data": "05:32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/currentTimestamp": {
+      "summary": "Current Timestamp",
+      "get": {
+        "tags": [
+          "Current Date/Time"
+        ],
+        "summary": "Current Timestamp",
+        "description": "Returns the current [unix/epoch](https://en.wikipedia.org/wiki/Unix_time) timestamp for the specified time zone.\n",
+        "operationId": "currentTimestamp",
+        "parameters": [
+          {
+            "name": "zone",
+            "in": "query",
+            "required": true,
+            "description": "A valid timezone as specified [here](http://php.net/manual/en/timezones.php).",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/current-timestamp-success"
+                },
+                "example": {
+                  "code": 200,
+                  "status": "OK",
+                  "data": "1503495668"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/methods": {
+      "get": {
+        "tags": [
+          "Prayer Times Methods"
+        ],
+        "summary": "Prayer Times Methods",
+        "description": "Returns all the prayer times calculation methods & details supported by Islamic Network API. \\\n\nFurthermore, [you can use customize the methods & create your own if needed](https://aladhan.com/calculation-methods).\n",
+        "operationId": "methods",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/methods-success"
+                },
+                "example": {
+                  "$ref": "./success-example.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendar": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Calendar",
+        "description": "Returns all prayer times for a specific calendar month.",
+        "operationId": "calendar",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A gregorian calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendarByAddress": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Calendar by address",
+        "description": "Returns all prayer times for a specific calendar month at a particular address.",
+        "operationId": "calendarByAddress",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "An address string\n",
+            "schema": {
+              "type": "string",
+              "example": "1420 Austin Bluffs Parkway, Colorado Springs, CO"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A gregorian calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/calendarByCity": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Calendar by city",
+        "description": "Returns all prayer times for a specific calendar month by City.",
+        "operationId": "calendarByCity",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "description": "A city name\n",
+            "schema": {
+              "type": "string",
+              "example": "London"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "A country name or 2 character alpha ISO 3166 code\n",
+            "schema": {
+              "type": "string",
+              "example": "GB"
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A gregorian calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/hijriCalendar": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Calendar",
+        "description": "Returns all prayer times for a specific calendar month.",
+        "operationId": "hijriCalendar",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A hijri calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/hijriCalendarByAddress": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Hijri Calendar by address",
+        "description": "Returns all prayer times for a specific Hijri calendar month at a particular address.",
+        "operationId": "hijriCalendarByAddress",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A hijri calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/hijriCalendarByCity": {
+      "get": {
+        "tags": [
+          "Monthly / Annual Calendar"
+        ],
+        "summary": "Prayer Times Hijri Calendar by city",
+        "description": "Returns all prayer times for a specific Hijri calendar month by City.",
+        "operationId": "hijriCalendarByCity",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "month",
+            "in": "query",
+            "description": "A hijri calendar month\n",
+            "schema": {
+              "type": "number",
+              "example": 8
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "description": "A gregorian calendar year\n",
+            "schema": {
+              "type": "number",
+              "example": 2022
+            }
+          },
+          {
+            "name": "annual",
+            "in": "query",
+            "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "example": false
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/calendar_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timings": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Prayer Times for date",
+        "description": "Returns all prayer times for a specific date.",
+        "operationId": "timings",
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timings/{date_or_timestamp}": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Prayer Times for date",
+        "description": "Returns all prayer times for a specific date.",
+        "operationId": "timings2",
+        "parameters": [
+          {
+            "name": "date_or_timestamp",
+            "in": "path",
+            "required": true,
+            "description": "A date in the DD-MM-YYYY format or UNIX timestamp. Defaults to the current date if omitted.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": 51.75865125
+            }
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+            "schema": {
+              "type": "number",
+              "example": -1.25387785
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timingsByAddress": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Timings By Address",
+        "description": "Returns all prayer times for a specific date at a particular address.",
+        "operationId": "timingsByAddress",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "query",
+            "description": "An address string\n",
+            "schema": {
+              "type": "string",
+              "example": "1420 Austin Bluffs Parkway, Colorado Springs, CO"
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timingsByAddress/{date_or_timestamp}": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Timings By Address",
+        "description": "Returns all prayer times for a specific date at a particular address.",
+        "operationId": "timingsByAddress2",
+        "parameters": [
+          {
+            "name": "date_or_timestamp",
+            "in": "path",
+            "required": true,
+            "description": "A date in the DD-MM-YYYY format or UNIX timestamp. Defaults to the current date if omitted.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "address",
+            "in": "query",
+            "description": "An address string\n",
+            "schema": {
+              "type": "string",
+              "example": "1420 Austin Bluffs Parkway, Colorado Springs, CO"
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timingsByCity": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Timings By City",
+        "description": "Returns all prayer times for a specific date in a particular city.",
+        "operationId": "timingsByCity",
+        "parameters": [
+          {
+            "name": "city",
+            "in": "query",
+            "description": "A city name\n",
+            "schema": {
+              "type": "string",
+              "example": "London"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "A country name or 2 character alpha ISO 3166 code\n",
+            "schema": {
+              "type": "string",
+              "example": "GB"
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/timingsByCity/{date_or_timestamp}": {
+      "get": {
+        "tags": [
+          "Daily"
+        ],
+        "summary": "Timings By City",
+        "description": "Returns all prayer times for a specific date in a particular city.",
+        "operationId": "timingsByCity2",
+        "parameters": [
+          {
+            "name": "date_or_timestamp",
+            "in": "path",
+            "required": true,
+            "description": "A date in the DD-MM-YYYY format or UNIX timestamp. Defaults to the current date if omitted.\n",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "city",
+            "in": "query",
+            "description": "A city name\n",
+            "schema": {
+              "type": "string",
+              "example": "London"
+            }
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "description": "A country name or 2 character alpha ISO 3166 code\n",
+            "schema": {
+              "type": "string",
+              "example": "GB"
+            }
+          },
+          {
+            "name": "method",
+            "in": "query",
+            "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+            "schema": {
+              "type": "number",
+              "default": 0,
+              "example": 4,
+              "enum": [
+                0,
+                1,
+                2,
+                3,
+                4,
+                5,
+                6,
+                7,
+                8,
+                9,
+                10,
+                11,
+                12,
+                13,
+                14,
+                99
+              ]
+            }
+          },
+          {
+            "name": "shafaq",
+            "in": "query",
+            "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+            "schema": {
+              "type": "string",
+              "default": "general",
+              "example": "general",
+              "enum": [
+                "general",
+                "ahmer",
+                "abyad"
+              ]
+            }
+          },
+          {
+            "name": "tune",
+            "in": "query",
+            "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+            "schema": {
+              "type": "string",
+              "example": "5,3,5,7,9,-1,0,8,-6"
+            }
+          },
+          {
+            "name": "school",
+            "in": "query",
+            "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "midnightMode",
+            "in": "query",
+            "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "enum": [
+                0,
+                1
+              ]
+            }
+          },
+          {
+            "name": "timezonestring",
+            "in": "query",
+            "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+            "schema": {
+              "type": "string",
+              "example": "Europe/London"
+            }
+          },
+          {
+            "name": "latitudeAdjustmentMethod",
+            "in": "query",
+            "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+            "schema": {
+              "type": "integer",
+              "enum": [
+                1,
+                2,
+                3
+              ]
+            }
+          },
+          {
+            "name": "adjustment",
+            "in": "query",
+            "description": "Number of days to adjust hijri date(s).\n",
+            "schema": {
+              "type": "integer",
+              "example": -1
+            }
+          },
+          {
+            "name": "iso8601",
+            "in": "query",
+            "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+            "schema": {
+              "type": "boolean",
+              "default": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/timings_response"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "current-date-success": {
+        "type": "object",
+        "required": [
+          "code",
+          "data",
+          "status"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/code"
+          },
+          "status": {
+            "$ref": "#/components/schemas/status"
+          },
+          "data": {
+            "type": "string",
+            "description": "Current date in the specified timezone.",
+            "format": "date",
+            "pattern": "dd-mm-yyyy",
+            "example": "0029-02-06"
+          }
+        }
+      },
+      "code": {
+        "type": "integer",
+        "description": "The response status code.",
+        "example": 200
+      },
+      "status": {
+        "type": "string",
+        "description": "The response status description.",
+        "example": "OK"
+      },
+      "current-time-success": {
+        "type": "object",
+        "required": [
+          "code",
+          "data",
+          "status"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/code"
+          },
+          "status": {
+            "$ref": "#/components/schemas/status"
+          },
+          "data": {
+            "type": "string",
+            "description": "Current time in the specified timezone.",
+            "format": "time",
+            "pattern": "hh:mm",
+            "example": "05:32"
+          }
+        }
+      },
+      "current-timestamp-success": {
+        "type": "object",
+        "required": [
+          "code",
+          "data",
+          "status"
+        ],
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/code"
+          },
+          "status": {
+            "$ref": "#/components/schemas/status"
+          },
+          "data": {
+            "type": "string",
+            "description": "Current epoch/unix timestamp in the specified timezone.",
+            "example": "1503495668"
+          }
+        }
+      },
+      "methods-success": {
+        "type": "object",
+        "required": [
+          "code",
+          "data",
+          "status"
+        ],
+        "properties": {
+          "code": {
+            "type": "number",
+            "description": "The response status code.",
+            "example": 200
+          },
+          "status": {
+            "type": "string",
+            "description": "The response status description.",
+            "example": "OK"
+          },
+          "data": {
+            "$ref": "#/components/schemas/methodssuccess_data"
+          }
+        }
+      },
+      "latitude": {
+        "type": "number",
+        "example": 51.75865125
+      },
+      "longitude": {
+        "type": "number",
+        "example": -1.25387785
+      },
+      "calendar_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/code_1"
+          },
+          "status": {
+            "$ref": "#/components/schemas/status_1"
+          },
+          "data": {
+            "$ref": "#/components/schemas/calendar_data"
+          }
+        }
+      },
+      "code_1": {
+        "type": "integer",
+        "example": 200
+      },
+      "status_1": {
+        "type": "string",
+        "example": "OK"
+      },
+      "calendar_data": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/result_item"
+        }
+      },
+      "result_item": {
+        "type": "object",
+        "properties": {
+          "timings": {
+            "$ref": "#/components/schemas/timings"
+          },
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        }
+      },
+      "timings": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "string",
+            "example": "02:52 (BST)"
+          },
+          "Sunrise": {
+            "type": "string",
+            "example": "05:33 (BST)"
+          },
+          "Dhuhr": {
+            "type": "string",
+            "example": "13:18 (BST)"
+          },
+          "Asr": {
+            "type": "string",
+            "example": "17:31 (BST)"
+          },
+          "Sunset": {
+            "type": "string",
+            "example": "20:11"
+          },
+          "Maghrib": {
+            "type": "string",
+            "example": "20:10"
+          },
+          "Isha": {
+            "type": "string",
+            "example": "22:11"
+          },
+          "Imsak": {
+            "type": "string",
+            "example": "03:33"
+          },
+          "Midnight": {
+            "type": "string",
+            "example": "00:58"
+          }
+        }
+      },
+      "date": {
+        "type": "object",
+        "properties": {
+          "readable": {
+            "type": "string",
+            "example": "20 Apr 2022"
+          },
+          "timestamp": {
+            "type": "string",
+            "example": "1650495506"
+          },
+          "gregorian": {
+            "$ref": "#/components/schemas/date_gregorian"
+          },
+          "hijri": {
+            "$ref": "#/components/schemas/date_hijri"
+          }
+        }
+      },
+      "returned_date_en": {
+        "type": "string",
+        "example": "20-04-2022"
+      },
+      "format": {
+        "type": "string",
+        "example": "DD-MM-YYYY"
+      },
+      "day_en": {
+        "type": "string",
+        "example": "20"
+      },
+      "weekday_en": {
+        "type": "object",
+        "properties": {
+          "en": {
+            "type": "string",
+            "description": "English name of weekday\n",
+            "example": "Wednesday"
+          }
+        }
+      },
+      "month_en": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "example": 4
+          },
+          "en": {
+            "type": "string",
+            "description": "English name of the month\n",
+            "example": "April"
+          }
+        }
+      },
+      "year_en": {
+        "type": "string",
+        "example": "2022"
+      },
+      "designation_en": {
+        "type": "object",
+        "properties": {
+          "abbreviated": {
+            "type": "string",
+            "example": "AD"
+          },
+          "expanded": {
+            "type": "string",
+            "example": "Anno Domini"
+          }
+        }
+      },
+      "returned_date_ar": {
+        "type": "string",
+        "example": "17-09-1443"
+      },
+      "day_ar": {
+        "type": "string",
+        "example": "17"
+      },
+      "weekday_en_ar": {
+        "type": "object",
+        "properties": {
+          "en": {
+            "type": "string",
+            "description": "English name of weekday\n",
+            "example": "Al Arba'a"
+          },
+          "ar": {
+            "type": "string",
+            "description": "Arabic name of weekday\n",
+            "example": "الاربعاء"
+          }
+        }
+      },
+      "month_en_ar": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "integer",
+            "example": 9
+          },
+          "en": {
+            "type": "string",
+            "description": "English name of the month\n",
+            "example": "Ramaḍān"
+          },
+          "ar": {
+            "type": "string",
+            "description": "Arabic name of the month\n",
+            "example": "رَمَضان"
+          }
+        }
+      },
+      "year_ar": {
+        "type": "string",
+        "example": "1443"
+      },
+      "designation_ar": {
+        "type": "object",
+        "properties": {
+          "abbreviated": {
+            "type": "string",
+            "example": "AH"
+          },
+          "expanded": {
+            "type": "string",
+            "example": "Anno Hegirae"
+          }
+        }
+      },
+      "meta": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "$ref": "#/components/schemas/latitude"
+          },
+          "longitude": {
+            "$ref": "#/components/schemas/longitude"
+          },
+          "timezone": {
+            "$ref": "#/components/schemas/timezone"
+          },
+          "method": {
+            "$ref": "#/components/schemas/method"
+          },
+          "latitudeAdjustmentMethod": {
+            "$ref": "#/components/schemas/latitudeAdjustmentMethod"
+          },
+          "midnightMode": {
+            "$ref": "#/components/schemas/midnightMode"
+          },
+          "school": {
+            "$ref": "#/components/schemas/school"
+          },
+          "offset": {
+            "$ref": "#/components/schemas/offset"
+          }
+        }
+      },
+      "timezone": {
+        "type": "string",
+        "description": "Timezone for all returned times\n",
+        "example": "Europe/London"
+      },
+      "method": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 4
+          },
+          "name": {
+            "type": "string",
+            "example": "Umm Al-Qura University, Makkah"
+          },
+          "params": {
+            "$ref": "#/components/schemas/method_params"
+          }
+        }
+      },
+      "latitudeAdjustmentMethod": {
+        "type": "string",
+        "example": "ANGLE_BASED"
+      },
+      "midnightMode": {
+        "type": "string",
+        "example": "STANDARD"
+      },
+      "school": {
+        "type": "string",
+        "example": "STANDARD"
+      },
+      "offset": {
+        "type": "object",
+        "properties": {
+          "Imsak": {
+            "type": "string",
+            "example": "5"
+          },
+          "Fajr": {
+            "type": "string",
+            "example": "3"
+          },
+          "Sunrise": {
+            "type": "string",
+            "example": "5"
+          },
+          "Dhuhr": {
+            "type": "string",
+            "example": "7"
+          },
+          "Asr": {
+            "type": "string",
+            "example": "9"
+          },
+          "Maghrib": {
+            "type": "string",
+            "example": "-1"
+          },
+          "Sunset": {
+            "type": "string",
+            "example": "0"
+          },
+          "Isha": {
+            "type": "string",
+            "example": "30 min"
+          },
+          "Midnight": {
+            "type": "string",
+            "example": "-6"
+          }
+        }
+      },
+      "timings_response": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "$ref": "#/components/schemas/code_1"
+          },
+          "status": {
+            "$ref": "#/components/schemas/status_1"
+          },
+          "data": {
+            "$ref": "#/components/schemas/timing_data"
+          }
+        }
+      },
+      "timing_data": {
+        "type": "object",
+        "properties": {
+          "timings": {
+            "$ref": "#/components/schemas/timings"
+          },
+          "date": {
+            "$ref": "#/components/schemas/date"
+          },
+          "meta": {
+            "$ref": "#/components/schemas/meta"
+          }
+        }
+      },
+      "methodssuccess_data_MWL_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 18
+          },
+          "Isha": {
+            "type": "number",
+            "example": 17
+          }
+        }
+      },
+      "methodssuccess_data_MWL_location": {
+        "type": "object",
+        "properties": {
+          "latitude": {
+            "$ref": "#/components/schemas/latitude"
+          },
+          "longitude": {
+            "$ref": "#/components/schemas/longitude"
+          }
+        }
+      },
+      "methodssuccess_data_MWL": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 3
+          },
+          "name": {
+            "type": "string",
+            "example": "Muslim World League"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_ISNA_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 15
+          },
+          "Isha": {
+            "type": "number",
+            "example": 15
+          }
+        }
+      },
+      "methodssuccess_data_ISNA": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 2
+          },
+          "name": {
+            "type": "string",
+            "example": "Islamic Society of North America (ISNA)"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_ISNA_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_EGYPT_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 19.5
+          },
+          "Isha": {
+            "type": "number",
+            "example": 17.5
+          }
+        }
+      },
+      "methodssuccess_data_EGYPT": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 5
+          },
+          "name": {
+            "type": "string",
+            "example": "Egyptian General Authority of Survey"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_EGYPT_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_MAKKAH_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 18.5
+          },
+          "Isha": {
+            "type": "string",
+            "example": "90 min"
+          }
+        }
+      },
+      "methodssuccess_data_MAKKAH": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 4
+          },
+          "name": {
+            "type": "string",
+            "example": "Umm Al-Qura University, Makkah"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_MAKKAH_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_KARACHI_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 18
+          },
+          "Isha": {
+            "type": "number",
+            "example": 18
+          }
+        }
+      },
+      "methodssuccess_data_KARACHI": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 1
+          },
+          "name": {
+            "type": "string",
+            "example": "University of Islamic Sciences, Karachi"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_KARACHI_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_TEHRAN_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 17.7
+          },
+          "Maghrib": {
+            "type": "number",
+            "example": 4.5
+          },
+          "Isha": {
+            "type": "number",
+            "example": 14
+          },
+          "Midnight": {
+            "type": "string",
+            "example": "JAFARI"
+          }
+        }
+      },
+      "methodssuccess_data_TEHRAN": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 7
+          },
+          "name": {
+            "type": "string",
+            "example": "Institute of Geophysics, University of Tehran"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_TEHRAN_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_JAFARI_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 16
+          },
+          "Maghrib": {
+            "type": "number",
+            "example": 4
+          },
+          "Isha": {
+            "type": "number",
+            "example": 14
+          },
+          "Midnight": {
+            "type": "string",
+            "example": "JAFARI"
+          }
+        }
+      },
+      "methodssuccess_data_JAFARI": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 0
+          },
+          "name": {
+            "type": "string",
+            "example": "Shia Ithna-Ashari, Leva Institute, Qum"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_JAFARI_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_GULF_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 19.5
+          },
+          "Isha": {
+            "type": "string",
+            "example": "90 min"
+          }
+        }
+      },
+      "methodssuccess_data_GULF": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 8
+          },
+          "name": {
+            "type": "string",
+            "example": "Gulf Region"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_GULF_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_KUWAIT_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 18
+          },
+          "Isha": {
+            "type": "number",
+            "example": 17.5
+          }
+        }
+      },
+      "methodssuccess_data_KUWAIT": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 9
+          },
+          "name": {
+            "type": "string",
+            "example": "Kuwait"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_KUWAIT_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_QATAR_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 10
+          },
+          "Isha": {
+            "type": "string",
+            "example": "90 min"
+          }
+        }
+      },
+      "methodssuccess_data_QATAR": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 10
+          },
+          "name": {
+            "type": "string",
+            "example": "Qatar"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_QATAR_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_SINGAPORE_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 20
+          },
+          "Isha": {
+            "type": "number",
+            "example": 18
+          }
+        }
+      },
+      "methodssuccess_data_SINGAPORE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 11
+          },
+          "name": {
+            "type": "string",
+            "example": "Majlis Ugama Islam Singapura, Singapore"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_SINGAPORE_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_FRANCE_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 12
+          },
+          "Isha": {
+            "type": "number",
+            "example": 12
+          }
+        }
+      },
+      "methodssuccess_data_FRANCE": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 12
+          },
+          "name": {
+            "type": "string",
+            "example": "Union Organization Islamic de France"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_FRANCE_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_TURKEY": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 13
+          },
+          "name": {
+            "type": "string",
+            "example": "Diyanet İşleri Başkanlığı, Turkey"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_RUSSIA_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "number",
+            "example": 16
+          },
+          "Isha": {
+            "type": "number",
+            "example": 15
+          }
+        }
+      },
+      "methodssuccess_data_RUSSIA": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 14
+          },
+          "name": {
+            "type": "string",
+            "example": "Spiritual Administration of Muslims of Russia"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_RUSSIA_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data_MOONSIGHTING_params": {
+        "type": "object",
+        "properties": {
+          "shafaq": {
+            "type": "string",
+            "example": "general"
+          }
+        }
+      },
+      "methodssuccess_data_MOONSIGHTING": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "example": 15
+          },
+          "name": {
+            "type": "string",
+            "example": "Moonsighting Committee Worldwide (Moonsighting.com)"
+          },
+          "params": {
+            "$ref": "#/components/schemas/methodssuccess_data_MOONSIGHTING_params"
+          },
+          "location": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL_location"
+          }
+        }
+      },
+      "methodssuccess_data": {
+        "type": "object",
+        "description": "Contains a collection of key-object mapping containing details of different prayer time calculation methods.",
+        "properties": {
+          "MWL": {
+            "$ref": "#/components/schemas/methodssuccess_data_MWL"
+          },
+          "ISNA": {
+            "$ref": "#/components/schemas/methodssuccess_data_ISNA"
+          },
+          "EGYPT": {
+            "$ref": "#/components/schemas/methodssuccess_data_EGYPT"
+          },
+          "MAKKAH": {
+            "$ref": "#/components/schemas/methodssuccess_data_MAKKAH"
+          },
+          "KARACHI": {
+            "$ref": "#/components/schemas/methodssuccess_data_KARACHI"
+          },
+          "TEHRAN": {
+            "$ref": "#/components/schemas/methodssuccess_data_TEHRAN"
+          },
+          "JAFARI": {
+            "$ref": "#/components/schemas/methodssuccess_data_JAFARI"
+          },
+          "GULF": {
+            "$ref": "#/components/schemas/methodssuccess_data_GULF"
+          },
+          "KUWAIT": {
+            "$ref": "#/components/schemas/methodssuccess_data_KUWAIT"
+          },
+          "QATAR": {
+            "$ref": "#/components/schemas/methodssuccess_data_QATAR"
+          },
+          "SINGAPORE": {
+            "$ref": "#/components/schemas/methodssuccess_data_SINGAPORE"
+          },
+          "FRANCE": {
+            "$ref": "#/components/schemas/methodssuccess_data_FRANCE"
+          },
+          "TURKEY": {
+            "$ref": "#/components/schemas/methodssuccess_data_TURKEY"
+          },
+          "RUSSIA": {
+            "$ref": "#/components/schemas/methodssuccess_data_RUSSIA"
+          },
+          "MOONSIGHTING": {
+            "$ref": "#/components/schemas/methodssuccess_data_MOONSIGHTING"
+          }
+        }
+      },
+      "date_gregorian": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/returned_date_en"
+          },
+          "format": {
+            "$ref": "#/components/schemas/format"
+          },
+          "day": {
+            "$ref": "#/components/schemas/day_en"
+          },
+          "weekday": {
+            "$ref": "#/components/schemas/weekday_en"
+          },
+          "month": {
+            "$ref": "#/components/schemas/month_en"
+          },
+          "year": {
+            "$ref": "#/components/schemas/year_en"
+          },
+          "designation": {
+            "$ref": "#/components/schemas/designation_en"
+          }
+        }
+      },
+      "date_hijri": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/returned_date_ar"
+          },
+          "format": {
+            "$ref": "#/components/schemas/format"
+          },
+          "day": {
+            "$ref": "#/components/schemas/day_ar"
+          },
+          "weekday": {
+            "$ref": "#/components/schemas/weekday_en_ar"
+          },
+          "month": {
+            "$ref": "#/components/schemas/month_en_ar"
+          },
+          "year": {
+            "$ref": "#/components/schemas/year_ar"
+          },
+          "designation": {
+            "$ref": "#/components/schemas/designation_ar"
+          },
+          "holidays": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "example": "1st Day of Ramadan"
+            }
+          }
+        }
+      },
+      "method_params": {
+        "type": "object",
+        "properties": {
+          "Fajr": {
+            "type": "string",
+            "example": "18.5"
+          },
+          "Isha": {
+            "type": "string",
+            "example": "90 min"
+          }
+        }
+      }
+    },
+    "parameters": {
+      "zone": {
+        "name": "zone",
+        "in": "query",
+        "required": true,
+        "description": "A valid timezone as specified [here](http://php.net/manual/en/timezones.php).",
+        "schema": {
+          "type": "string",
+          "example": "Europe/London"
+        }
+      },
+      "latitude": {
+        "name": "latitude",
+        "in": "query",
+        "description": "The decimal value for the latitude co-ordinate of the location you want the time computed for.\n",
+        "schema": {
+          "type": "number",
+          "example": 51.75865125
+        }
+      },
+      "longitude": {
+        "name": "longitude",
+        "in": "query",
+        "description": "The decimal value for the longitude co-ordinate of the location you want the time computed for.\n",
+        "schema": {
+          "type": "number",
+          "example": -1.25387785
+        }
+      },
+      "gregorian_month": {
+        "name": "month",
+        "in": "query",
+        "description": "A gregorian calendar month\n",
+        "schema": {
+          "type": "number",
+          "example": 8
+        }
+      },
+      "gregorian_year": {
+        "name": "year",
+        "in": "query",
+        "description": "A gregorian calendar year\n",
+        "schema": {
+          "type": "number",
+          "example": 2022
+        }
+      },
+      "annual": {
+        "name": "annual",
+        "in": "query",
+        "description": "If true, month parameter will be ignored and the calendar for the entire year will be returned\n",
+        "schema": {
+          "type": "boolean",
+          "default": false,
+          "example": false
+        }
+      },
+      "method": {
+        "name": "method",
+        "in": "query",
+        "description": "A prayer times calculation method. Methods identify various schools of thought about how to compute the timings. If not specified, it defaults to the closest authority based on the location or co-ordinates specified in the API call. This parameter accepts values from 0-12 and 99, as specified below: <br><br> Possible values:\n* `0` - Shia Ithna-Ansari\n* `1` - University of Islamic Sciences, Karachi\n* `2` - Islamic Society of North America\n* `3` - Muslim World League\n* `4` - Umm Al-Qura University, Makkah\n* `5` - Egyptian General Authority of Survey\n* `6` - Institute of Geophysics, University of Tehran\n* `7` - Gulf Region\n* `8` - Kuwait\n* `9` - Qatar\n* `10` - Majlis Ugama Islam Singapura, Singapore\n* `11` - Union Organization islamic de France\n* `12` - Diyanet İşleri Başkanlığı, Turkey\n* `13` - Spiritual Administration of Muslims of Russia\n* `14` - Moonsighting Committee Worldwide (also requires shafaq paramteer)\n* `99` - Custom. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods)\n",
+        "schema": {
+          "type": "number",
+          "default": 0,
+          "example": 4,
+          "enum": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7,
+            8,
+            9,
+            10,
+            11,
+            12,
+            13,
+            14,
+            99
+          ]
+        }
+      },
+      "shafaq": {
+        "name": "shafaq",
+        "in": "query",
+        "description": "Which Shafaq to use if the method is Moonsighting Commitee Worldwide. Acceptable options are 'general', 'ahmer' and 'abyad'\n",
+        "schema": {
+          "type": "string",
+          "default": "general",
+          "example": "general",
+          "enum": [
+            "general",
+            "ahmer",
+            "abyad"
+          ]
+        }
+      },
+      "tune": {
+        "name": "tune",
+        "in": "query",
+        "description": "Comma Separated String of integers to offset timings returned by the API in minutes. The order is `Imsak,Fajr,Sunrise,Dhuhr,Asr,Maghrib,Sunset,Isha,Midnight`. See [https://aladhan.com/calculation-methods](https://aladhan.com/calculation-methods) for more details.\n",
+        "schema": {
+          "type": "string",
+          "example": "5,3,5,7,9,-1,0,8,-6"
+        }
+      },
+      "school": {
+        "name": "school",
+        "in": "query",
+        "description": "Shafi (or the standard way) or Hanafi. <br /><br /> Possible values:\n* `0` - Shafi\n* `1` - Hanafi\n",
+        "schema": {
+          "type": "integer",
+          "default": 0,
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "midnightMode": {
+        "name": "midnightMode",
+        "in": "query",
+        "description": "Determines the method for calculating midnight <br><br> Possible values:\n* `0` - Standard (Mid Sunset to Sunrise)\n* `1` - Jafari (Mid Sunset to Fajr)\n",
+        "schema": {
+          "type": "integer",
+          "default": 0,
+          "enum": [
+            0,
+            1
+          ]
+        }
+      },
+      "timezonestring": {
+        "name": "timezonestring",
+        "in": "query",
+        "description": "A valid timezone name as specified on [https://php.net/manual/en/timezones.php](https://php.net/manual/en/timezones.php). <br> *If you do not specify this, we'll calcuate it using the co-ordinates you provide.*\n",
+        "schema": {
+          "type": "string",
+          "example": "Europe/London"
+        }
+      },
+      "latitudeAdjustmentMethod": {
+        "name": "latitudeAdjustmentMethod",
+        "in": "query",
+        "description": "Method for adjusting times at higher latitudes. For example, if you are checking timings in the UK or Sweden. <br><br> Possible values:\n* `1` - Middle of the Night\n* `2` - One Seventh\n* `3` - Angle Based\n",
+        "schema": {
+          "type": "integer",
+          "enum": [
+            1,
+            2,
+            3
+          ]
+        }
+      },
+      "adjustment": {
+        "name": "adjustment",
+        "in": "query",
+        "description": "Number of days to adjust hijri date(s).\n",
+        "schema": {
+          "type": "integer",
+          "example": -1
+        }
+      },
+      "iso8601": {
+        "name": "iso8601",
+        "in": "query",
+        "description": "Whether to return the prayer times in the iso8601 format. Example: true will return 2020-07-01T02:56:00+01:00 instead of 02:56\n",
+        "schema": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "address": {
+        "name": "address",
+        "in": "query",
+        "description": "An address string\n",
+        "schema": {
+          "type": "string",
+          "example": "1420 Austin Bluffs Parkway, Colorado Springs, CO"
+        }
+      },
+      "city": {
+        "name": "city",
+        "in": "query",
+        "description": "A city name\n",
+        "schema": {
+          "type": "string",
+          "example": "London"
+        }
+      },
+      "country": {
+        "name": "country",
+        "in": "query",
+        "description": "A country name or 2 character alpha ISO 3166 code\n",
+        "schema": {
+          "type": "string",
+          "example": "GB"
+        }
+      },
+      "hijri_month": {
+        "name": "month",
+        "in": "query",
+        "description": "A hijri calendar month\n",
+        "schema": {
+          "type": "number",
+          "example": 8
+        }
+      },
+      "hijri_year": {
+        "name": "year",
+        "in": "query",
+        "description": "A gregorian calendar year\n",
+        "schema": {
+          "type": "number",
+          "example": 2022
+        }
+      },
+      "date_or_timestamp": {
+        "name": "date_or_timestamp",
+        "in": "path",
+        "required": true,
+        "description": "A date in the DD-MM-YYYY format or UNIX timestamp. Defaults to the current date if omitted.\n",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Current Date/Time"
+    },
+    {
+      "name": "Prayer Times Methods"
+    }
+  ]
+}
