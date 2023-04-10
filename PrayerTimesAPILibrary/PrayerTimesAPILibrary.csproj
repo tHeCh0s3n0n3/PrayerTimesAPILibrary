@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>Prayer Times Library.ico</ApplicationIcon>
+    <ApplicationIcon>PrayerTimesLibrary.ico</ApplicationIcon>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>com.TarekFadel.PrayerTimesAPILibrary</PackageId>
     <Title>Prayer Times API Library</Title>
@@ -36,7 +36,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="Prayer Times Library.ico" />
+		<Content Include="PrayerTimesLibrary.ico">
+			<Pack>False</Pack>
+		</Content>
   </ItemGroup>
 
   <ItemGroup>
