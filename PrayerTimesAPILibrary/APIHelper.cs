@@ -6,9 +6,24 @@ namespace PrayerTimesAPILibrary;
 
 public class APIHelper
 {
-    private static readonly PrayerAPI.Client _client = new(new HttpClient());
+    private readonly HttpClient _httpClient;
+    private readonly PrayerAPI.Client _client;
 
-    public async static Task<DateOnly?> GetCurrentDateAsync(CancellationToken cancellationToken = default)
+    public APIHelper()
+        : this(new HttpClient(
+            new SocketsHttpHandler()
+            {
+                PooledConnectionLifetime = TimeSpan.FromHours(1)
+            }))
+    { }
+
+    public APIHelper(HttpClient httpClient)
+    {
+        _httpClient = httpClient;
+        _client = new(_httpClient);
+    }
+
+    public async Task<DateOnly?> GetCurrentDateAsync(CancellationToken cancellationToken = default)
     {
         ApiResponse<CurrentDateSuccess>? response = null;
         if (TimeZoneInfo.TryConvertWindowsIdToIanaId(TimeZoneInfo.Local.StandardName, out string? ianaName)
@@ -24,7 +39,7 @@ public class APIHelper
         return null;
     }
 
-    public async static Task<TimeOnly?> GetCurrentTimeAsync(CancellationToken cancellationToken = default)
+    public async Task<TimeOnly?> GetCurrentTimeAsync(CancellationToken cancellationToken = default)
     {
         ApiResponse<CurrentTimeSuccess>? response = null;
         if (TimeZoneInfo.TryConvertWindowsIdToIanaId(TimeZoneInfo.Local.StandardName, out string? ianaName)
@@ -40,7 +55,7 @@ public class APIHelper
         return null;
     }
 
-    public async static Task<long?> GetCurrentTimestampAsync(CancellationToken cancellationToken = default)
+    public async Task<long?> GetCurrentTimestampAsync(CancellationToken cancellationToken = default)
     {
         long? retval = null;
         if (TimeZoneInfo.TryConvertWindowsIdToIanaId(TimeZoneInfo.Local.StandardName, out string? ianaName)
@@ -56,14 +71,14 @@ public class APIHelper
         return retval;
     }
 
-    public async static Task<Methodssuccess_data?> GetPrayerMethodsAsync(CancellationToken cancellationToken = default)
+    public async Task<Methodssuccess_data?> GetPrayerMethodsAsync(CancellationToken cancellationToken = default)
     {
         var response = await _client.V1MethodsAsync(cancellationToken);
         return response?.Result?.Data;
     }
 
     #region Get Single Day Timings
-    public async static Task<TimingsByCityResult> GetTimingsByCityAsync(string city, string countryCode, CancellationToken cancellationToken = default)
+    public async Task<TimingsByCityResult> GetTimingsByCityAsync(string city, string countryCode, CancellationToken cancellationToken = default)
     {
         ApiResponse<Timings_response>? response
             = await _client.V1TimingsByCityGetAsync(city: city
@@ -115,7 +130,7 @@ public class APIHelper
         return retval;
     }
 
-    public async static Task<TimingsByLatLongResult> GetTimingsByLatLongAsync(double latitude, double longitude, CancellationToken cancellationToken = default)
+    public async Task<TimingsByLatLongResult> GetTimingsByLatLongAsync(double latitude, double longitude, CancellationToken cancellationToken = default)
     {
         ApiResponse<Timings_response>? response
             = await _client.V1TimingsGetAsync(latitude: latitude
@@ -169,7 +184,7 @@ public class APIHelper
     #endregion
 
     #region Get Calendar Timings
-    public async static Task<List<TimingsByCityResult>> GetMonthlyTimingsByCityAsync(string city, string countryCode, double month, double year, CancellationToken cancellationToken = default)
+    public async Task<List<TimingsByCityResult>> GetMonthlyTimingsByCityAsync(string city, string countryCode, double month, double year, CancellationToken cancellationToken = default)
     {
         ApiResponse<Calendar_response>? response
             = await _client.V1CalendarByCityAsync(city: city

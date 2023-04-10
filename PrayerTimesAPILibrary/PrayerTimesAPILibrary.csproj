@@ -8,7 +8,7 @@
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>com.TarekFadel.PrayerTimesAPILibrary</PackageId>
     <Title>Prayer Times API Library</Title>
-    <Version>1.0.0</Version>
+    <Version>2.0.23100.2</Version>
     <Authors>tHeCh0s3n0n3</Authors>
     <Company>TarekFadel.com</Company>
     <Product>Prayer Times API Library</Product>
@@ -21,9 +21,10 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>library;prayer times</PackageTags>
     <NeutralLanguage>en-US</NeutralLanguage>
-    <AssemblyVersion>1.0.23088.1</AssemblyVersion>
-    <FileVersion>1.0.23088.1</FileVersion>
+    <AssemblyVersion>2.0.23100.2</AssemblyVersion>
+    <FileVersion>2.0.23100.2</FileVersion>
     <PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+    <PackageOutputPath>bin\Publish\</PackageOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -5,34 +5,37 @@ using PrayerTimesAPILibrary.ResultObjects;
 
 Console.WriteLine("Starting tests");
 
-//await TestCurrentDateTime();
-//await TestCurrentTime();
-//await TestCurrentTimestamp();
+APIHelper api = new();
+
+await TestCurrentDateTime();
+await TestCurrentTime();
+await TestCurrentTimestamp();
 
 string city = "Dubai";
 string countryCode = "AE";
 await TestTodaysTimingsByCity(city, countryCode);
-//await TestMonthTimings(city, countryCode);
+await TestMonthTimings(city, countryCode);
 
 double latitude = 25.0962724;
 double longitude = 55.3254198;
 await TestTodaysTimingsByLatLong(latitude, longitude);
 
+
 async Task TestCurrentDateTime()
 {
-    DateOnly? currentDateTime = await APIHelper.GetCurrentDateAsync();
+    DateOnly? currentDateTime = await api.GetCurrentDateAsync();
     Console.WriteLine($"API Current DateTime: {currentDateTime:yyyy-MM-dd}");
 }
 
 async Task TestCurrentTime()
 {
-    TimeOnly? currentTime = await APIHelper.GetCurrentTimeAsync();
+    TimeOnly? currentTime = await api.GetCurrentTimeAsync();
     Console.WriteLine($"API Current Time: {currentTime:hh:mm:ss}");
 }
 
 async Task TestCurrentTimestamp()
 {
-    long? currentTimestamp = await APIHelper.GetCurrentTimestampAsync();
+    long? currentTimestamp = await api.GetCurrentTimestampAsync();
     if (currentTimestamp is not null)
     {
         DateTime currentTimestampAsDateTime = DateTime.UnixEpoch.AddSeconds(Convert.ToDouble(currentTimestamp));
@@ -46,7 +49,7 @@ async Task TestCurrentTimestamp()
 
 async Task TestTodaysTimingsByCity(string city, string countryCode)
 {
-    TimingsByCityResult todaysTimings = await APIHelper.GetTimingsByCityAsync(city, countryCode);
+    TimingsByCityResult todaysTimings = await api.GetTimingsByCityAsync(city, countryCode);
     Console.Write($"Prayer Timings for {todaysTimings.City}, {todaysTimings.CountryCode} on ");
     Console.Write($"{todaysTimings.GregorianDate:yyyy-MM-dd} ");
     Console.WriteLine($"({todaysTimings.HijriDate})");
@@ -63,7 +66,7 @@ async Task TestTodaysTimingsByCity(string city, string countryCode)
 
 async Task TestTodaysTimingsByLatLong(double latitude, double longitude)
 {
-    TimingsByLatLongResult todaysTimings = await APIHelper.GetTimingsByLatLongAsync(latitude, longitude);
+    TimingsByLatLongResult todaysTimings = await api.GetTimingsByLatLongAsync(latitude, longitude);
     Console.Write($"Prayer Timings for {todaysTimings.Latitude} {todaysTimings.Longitude} on ");
     Console.Write($"{todaysTimings.GregorianDate:yyyy-MM-dd} ");
     Console.WriteLine($"({todaysTimings.HijriDate})");
@@ -81,10 +84,10 @@ async Task TestTodaysTimingsByLatLong(double latitude, double longitude)
 async Task TestMonthTimings(string city, string countryCode)
 {
     List<TimingsByCityResult> monthTimings
-        = await APIHelper.GetMonthlyTimingsByCityAsync(city
-                                                       , countryCode
-                                                       , Convert.ToDouble(DateTime.Now.Month)
-                                                       , Convert.ToDouble(DateTime.Now.Year));
+        = await api.GetMonthlyTimingsByCityAsync(city
+                                                 , countryCode
+                                                 , Convert.ToDouble(DateTime.Now.Month)
+                                                 , Convert.ToDouble(DateTime.Now.Year));
 
     foreach (TimingsByCityResult timings in monthTimings)
     {
